@@ -39,7 +39,7 @@ public class AnimeListingController : ControllerBase
         
         var s = _manager.AnimeListing[series];
         
-        if (series >= s.Episodes.Length || episode < 0)
+        if (episode >= s.Episodes.Length || episode < 0)
             return NotFound();
         
         var ep = s.Episodes[episode];

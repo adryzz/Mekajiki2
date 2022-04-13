@@ -39,7 +39,7 @@ public class MangaListingController : ControllerBase
         
         var s = _manager.MangaListing[series];
         
-        if (series >= s.Volumes.Length || volume < 0)
+        if (volume >= s.Volumes.Length || volume < 0)
             return NotFound();
         
         
