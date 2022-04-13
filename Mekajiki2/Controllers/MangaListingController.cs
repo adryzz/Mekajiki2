@@ -32,9 +32,17 @@ public class MangaListingController : ControllerBase
     
     [HttpGet]
     [Route("{series}/{volume}")]
-    public async Task<IActionResult> Get(int series, uint volume)
+    public async Task<IActionResult> Get(int series, int volume)
     {
+        if (series >= _manager.MangaListing.Count || series < 0)
+            return NotFound();
+        
         var s = _manager.MangaListing[series];
+        
+        if (series >= s.Volumes.Length || volume < 0)
+            return NotFound();
+        
+        
         var vol = s.Volumes[volume];
         
         return PhysicalFile(vol.FilePath, "application/octet-stream", $"{s.Name}-{volume}{Path.GetExtension(vol.FilePath)}", true);

@@ -32,9 +32,16 @@ public class AnimeListingController : ControllerBase
     
     [HttpGet]
     [Route("{series}/{episode}")]
-    public async Task<IActionResult> Get(int series, uint episode)
+    public async Task<IActionResult> Get(int series, int episode)
     {
+        if (series >= _manager.AnimeListing.Count || series < 0)
+            return NotFound();
+        
         var s = _manager.AnimeListing[series];
+        
+        if (series >= s.Episodes.Length || episode < 0)
+            return NotFound();
+        
         var ep = s.Episodes[episode];
         
         return PhysicalFile(ep.FilePath, "application/octet-stream", $"{s.Name}-{episode}{Path.GetExtension(ep.FilePath)}", true);
