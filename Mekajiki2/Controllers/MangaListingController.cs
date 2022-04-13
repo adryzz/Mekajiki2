@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -43,6 +44,6 @@ public class MangaListingController : ControllerBase
     [Route("search")]
     public async Task<IEnumerable<Manga>> Search([FromQuery] string query)
     {
-        return _manager.MangaListing.Where(x => x.Name.Contains(query));
+        return _manager.MangaListing.Where(x => x.Name.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0);
     }
 }

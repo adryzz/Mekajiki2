@@ -10,5 +10,5 @@ public struct AnimeEpisode
     
     public TimeSpan Duration { get; set; }
 
-    public (uint Width, uint Height) Resolution { get; set; }
+    public Resolution Resolution { get; set; }
 }
