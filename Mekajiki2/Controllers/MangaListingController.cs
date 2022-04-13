@@ -1,6 +1,48 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Mekajiki2.Types;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+
 namespace Mekajiki2.Controllers;
 
-public class MangaListingController
+[Area("api")]
+[Route("[area]/manga")]
+public class MangaListingController : ControllerBase
 {
+    private readonly ILogger<MangaListingController> _logger;
     
+    private readonly IListingManager _manager;
+    
+    public MangaListingController(ILogger<MangaListingController> logger, IListingManager manager)
+    {
+        _logger = logger;
+        _manager = manager;
+    }
+    
+    [HttpGet]
+    [Route("list")]
+    public async Task<IEnumerable<Manga>> List()
+    {
+        return _manager.MangaListing;
+    }
+    
+    [HttpGet]
+    [Route("{series}/{volume}")]
+    public async Task<IActionResult> Get(int series, uint volume)
+    {
+        var s = _manager.MangaListing[series];
+        var vol = s.Volumes[volume];
+        
+        return PhysicalFile(vol.FilePath, "application/octet-stream", $"{s.Name}-{volume}{Path.GetExtension(vol.FilePath)}", true);
+    }
+    
+    [HttpGet]
+    [Route("search")]
+    public async Task<IEnumerable<Manga>> Search([FromQuery] string query)
+    {
+        return _manager.MangaListing.Where(x => x.Name.Contains(query));
+    }
 }

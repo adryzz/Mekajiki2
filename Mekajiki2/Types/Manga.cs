@@ -1,6 +1,8 @@
 namespace Mekajiki2.Types;
 
-public class Manga
+public struct Manga
 {
+    public string Name { get; set; }
     
+    public MangaVolume[] Volumes { get; set; }
 }
