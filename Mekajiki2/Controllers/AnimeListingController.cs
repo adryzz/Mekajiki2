@@ -15,34 +15,37 @@ public class AnimeListingController : ControllerBase
 {
     private readonly ILogger<AnimeListingController> _logger;
     
-    private readonly IListingManager _manager;
+    private readonly IListingManager _listing;
     
-    public AnimeListingController(ILogger<AnimeListingController> logger, IListingManager manager)
+    public AnimeListingController(ILogger<AnimeListingController> logger, IListingManager listing)
     {
         _logger = logger;
-        _manager = manager;
+        _listing = listing;
     }
     
     [HttpGet]
     [Route("list")]
     public async Task<IEnumerable<Anime>> List()
     {
-        return _manager.AnimeListing;
+        return _listing.AnimeListing;
     }
     
     [HttpGet]
     [Route("{series}/{episode}")]
     public async Task<IActionResult> Get(int series, int episode)
     {
-        if (series >= _manager.AnimeListing.Count || series < 0)
+        if (series >= _listing.AnimeListing.Count || series < 0)
             return NotFound();
         
-        var s = _manager.AnimeListing[series];
+        var s = _listing.AnimeListing[series];
         
         if (episode >= s.Episodes.Length || episode < 0)
             return NotFound();
         
         var ep = s.Episodes[episode];
+
+        if (!System.IO.File.Exists(ep.FilePath))
+            return NoContent();
         
         return PhysicalFile(ep.FilePath, "application/octet-stream", $"{s.Name}-{episode}{Path.GetExtension(ep.FilePath)}", true);
     }
@@ -51,6 +54,6 @@ public class AnimeListingController : ControllerBase
     [Route("search")]
     public async Task<IEnumerable<Anime>> Search([FromQuery] string query)
     {
-        return _manager.AnimeListing.Where(x => x.Name.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0);
+        return _listing.AnimeListing.Where(x => x.Name.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0);
     }
 }
