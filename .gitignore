@@ -3,3 +3,12 @@ obj/
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
+.idea/
+
+Mekajiki2/anime.json
+
+Mekajiki2/appsettings.Development.json
+
+Mekajiki2/appsettings.json
+
+Mekajiki2/config.json

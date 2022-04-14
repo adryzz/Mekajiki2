@@ -28,7 +28,7 @@ public class ConfigurationManager : IConfigurationManager
     {
         await using (Stream fs = File.OpenWrite(_path))
         {
-            await JsonSerializer.SerializeAsync(fs, Current);
+            await JsonSerializer.SerializeAsync(fs, Current, new JsonSerializerOptions{WriteIndented = true});
         }
     }
 
